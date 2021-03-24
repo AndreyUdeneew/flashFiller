@@ -2,23 +2,36 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-from tkinter import *
+
 from tkinter.filedialog import *
+from tkinter import *
+import fileinput
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 def selectFullScreens():
-    ops = askopenfilenames()
+    filename = askopenfilename(parent=window)
+    f = open(filename)
+    raw=f.read()
+    print(raw)
     text0.insert(INSERT,'Готово')
 
+
 def selectSmallImages():
-    ops = askopenfilenames()
+    filename = askopenfilename(parent=window)
+    f = open(filename)
+    raw = f.read()
+    print(raw)
+    а = close(filename)
     text1.insert(INSERT,'Готово')
 
 def selectSounds():
-    ops = askopenfilenames()
+    filename = askopenfilename(parent=window)
+    f = open(filename)
+    raw = f.read()
+    print(raw)
     text2.insert(INSERT,'Готово')
 
 # Press the green button in the gutter to run the script.
