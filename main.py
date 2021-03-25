@@ -16,9 +16,19 @@ def selectFullScreens():
     for fileName in filenames:
         f = open(fileName)
         raw = f.read()
-        print(raw)
         f.close()
+        # result = re.findall(r'\w+', raw)
+        result = re.findall(r'[0x]\w+', raw)
+        result = result[6:len(result)]
+        result = re.sub(r'0x', '', str(result))
+        result = re.sub(r'0x', '', str(result))
+        result = re.sub(r'\[', '', result)
+        result = re.sub(r'\]', '', result)
+        result = re.findall(r'[^\']\w', result)
+        print(len(result))
+        print(result)
         print(fileName)
+        print(len(filenames))
     text0.insert(INSERT, 'Готово')
 
 
@@ -26,10 +36,22 @@ def selectSmallImages():
     filenames = askopenfilenames(parent=window)
     for fileName in filenames:
         f = open(fileName)
+        # last_line = f.readlines()[-1]
+        # print(last_line)
         raw = f.read()
-        print(raw)
         f.close()
+        # result = re.findall(r'\w+', raw)
+        result = re.findall(r'[0x]\w+', raw)
+        result = result[6:len(result)]
+        result = re.sub(r'0x', '', str(result))
+        result = re.sub(r'0x', '', str(result))
+        result = re.sub(r'\[', '', result)
+        result = re.sub(r'\]', '', result)
+        result = re.findall(r'[^\']\w', result)
+        print(len(result))
+        print(result)
         print(fileName)
+        print(len(filenames))
     text1.insert(INSERT,'Готово')
 
 def selectSounds():
@@ -37,8 +59,8 @@ def selectSounds():
     for fileName in filenames:
         f = open(fileName)
         raw = f.read()
-        print(raw)
         f.close()
+        print(raw)
         print(fileName)
     text2.insert(INSERT, 'Готово')
 
