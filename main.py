@@ -9,30 +9,38 @@ import fileinput
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    print(f'Bye, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 def selectFullScreens():
-    filename = askopenfilename(parent=window)
-    f = open(filename)
-    raw=f.read()
-    print(raw)
-    text0.insert(INSERT,'Готово')
+    filenames = askopenfilenames(parent=window)
+    for fileName in filenames:
+        f = open(fileName)
+        raw = f.read()
+        print(raw)
+        f.close()
+        print(fileName)
+    text0.insert(INSERT, 'Готово')
 
 
 def selectSmallImages():
-    filename = askopenfilename(parent=window)
-    f = open(filename)
-    raw = f.read()
-    print(raw)
-    а = close(filename)
+    filenames = askopenfilenames(parent=window)
+    for fileName in filenames:
+        f = open(fileName)
+        raw = f.read()
+        print(raw)
+        f.close()
+        print(fileName)
     text1.insert(INSERT,'Готово')
 
 def selectSounds():
-    filename = askopenfilename(parent=window)
-    f = open(filename)
-    raw = f.read()
-    print(raw)
-    text2.insert(INSERT,'Готово')
+    filenames = askopenfilenames(parent=window)
+    for fileName in filenames:
+        f = open(fileName)
+        raw = f.read()
+        print(raw)
+        f.close()
+        print(fileName)
+    text2.insert(INSERT, 'Готово')
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
