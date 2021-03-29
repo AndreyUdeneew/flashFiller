@@ -4,41 +4,51 @@ from tkinter import *
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from tkinter.filedialog import *
-outputPath = 'C:\Users\Stasy\Desktop\output2FLASH.txt'
+import os
+outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Bye, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 def selectFullScreens():
-    filenames = askopenfilenames(parent=window)
-    for fileName in filenames:
+    fileNames = askopenfilenames(parent=window)
+    fOut = open(outputFile, 'w')
+    for fileName in fileNames:
         f = open(fileName)
-        raw = f.read()
+        lines = f.readlines()
+        for line in lines:
+            for word in line.split(' '):
+                if word.startswith('0x'):
+                    line = re.findall(r'[0x]\w+', str(line))
+                    line = str(line)
+                    line = re.sub(r'\]', '', line)
+                    line = re.sub(r'\[', '', line)
+                    line = re.sub(r'0x', '', line)
+                    line = re.sub(r'\'', '', line)
+                    line = re.sub(r'\ ', '', line)
+                    fOut.writelines(line)
+                    fOut.writelines('\n')
+                    print(line)
+                    break
         f.close()
-        result = re.findall(r'[0x]\w+', raw)
-        result = result[6:len(result)]
-        result = re.sub(r'0x', '', str(result))
-        result = re.sub(r'\[', '', result)
-        result = re.sub(r'\]', '', result)
-        result = re.findall(r'[^\']\w', result)
-        # print(len(result))
-        # print(result)
         # print(fileName)
         # print(len(filenames))
     adds = 0
-    for i in range(256-len(filenames)):
-        adds = '0xff,'*8192
+    for i in range(256-len(fileNames)):
+        for j in range(127):
+            adds = ('0xff,'*64)+'\r\n'
     print(i)
     print(int(len(adds)/5))
     print(adds)
-        # print(len(filenames))
+        # print(len(fileNames))
+    fOut.close()
     text0.insert(INSERT, 'Готово')
 
 
 def selectSmallImages():
-    filenames = askopenfilenames(parent=window)
-    for fileName in filenames:
+    fileNames = askopenfilenames(parent=window)
+    for fileName in fileNames:
         f = open(fileName)
         last_line = f.readlines()[-3]
         f.close()
@@ -62,12 +72,12 @@ def selectSmallImages():
         print(len(result))
         print(result)
         # print(fileName)
-        # print(len(filenames))
+        # print(len(fileNames))
     text1.insert(INSERT,'Готово')
 
 def selectSounds():
-    filenames = askopenfilenames(parent=window)
-    for fileName in filenames:
+    fileNames = askopenfilenames(parent=window)
+    for fileName in fileNames:
         f = open(fileName)
         raw = f.read()
         f.close()
