@@ -87,27 +87,27 @@ def selectSmallImages():
         if (length < 8192):
             print('small image')
             for i in range(1, int((8192-length)/64)+1, 1):
-                adds = ('0xff,' * 64) + '\n'
-                adds = re.sub(r'\]', '', adds)
-                adds = re.sub(r'\[', '', adds)
-                adds = re.sub(r'0x', '', adds)
-                adds = re.sub(r'\'', '', adds)
-                adds = re.sub(r'\ ', '', adds)
+                complement = ('0xff,' * 64) + '\n'
+                complement = re.sub(r'\]', '', complement)
+                complement = re.sub(r'\[', '', complement)
+                complement = re.sub(r'0x', '', complement)
+                complement = re.sub(r'\'', '', complement)
+                complement = re.sub(r'\ ', '', complement)
                 # print(adds)
-                fOut.writelines(adds)
-        for i in range(1, 256 + 1 - len(fileNames), 1):
-            for j in range(1, 128 + 1, 1):
-                adds = ('0xff,' * 64) + '\n'
-                adds = re.sub(r'\]', '', adds)
-                adds = re.sub(r'\[', '', adds)
-                adds = re.sub(r'0x', '', adds)
-                adds = re.sub(r'\'', '', adds)
-                adds = re.sub(r'\ ', '', adds)
-                # print(adds)
-                fOut.writelines(adds)
-                # fOut.writelines('\n')
-        print(i)
-        print(int(len(adds) / 5))
+                fOut.writelines(complement)
+    for m in range(1, 256 + 1 - len(fileNames), 1):
+        for n in range(1, 128 + 1, 1):
+            adds = ('0xff,' * 64) + '\n'
+            adds = re.sub(r'\]', '', adds)
+            adds = re.sub(r'\[', '', adds)
+            adds = re.sub(r'0x', '', adds)
+            adds = re.sub(r'\'', '', adds)
+            adds = re.sub(r'\ ', '', adds)
+            # print(adds)
+            fOut.writelines(adds)
+            # fOut.writelines('\n')
+    print(i)
+    print(n)
     fOut.close()
     text1.insert(INSERT,'Готово')
 
