@@ -3,8 +3,10 @@
 from tkinter import *
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from tkinter import filedialog
 from tkinter.filedialog import *
 import os
+import wave
 
 
 outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
@@ -12,6 +14,12 @@ outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Bye, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+
+def selectOutputDir():
+    OutputDir = filedialog.askdirectory(parent=window)
+    outputFile = OutputDir+'/output2FLASH.txt'
+    text3.insert(INSERT, outputFile)
+    return outputFile
 
 def selectFullScreens():
     fileNames = askopenfilenames(parent=window)
@@ -119,42 +127,52 @@ def selectSounds():
     fileNames = askopenfilenames(parent=window)
     fileNames = sorted(fileNames)
     for fileName in fileNames:
-        f = open(fileName)
-        raw = f.read()
-        f.close()
-        print(raw)
+        wav = wave.open(fileName, mode="r")
+        (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
+        sound = wav.readframes(nframes)
+        wav.close()
+        print(sound)
         print(fileName)
+        print(nframes)
+        print(sampwidth)
+        print(framerate)
     text2.insert(INSERT, 'Готово')
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     window = Tk()
-    window.geometry('320x100')
+    window.geometry('900x100')
     window.title("flashFiller")
 
     lbl0 = Label(window, text="Выбор полноэкранных картинок")
-    lbl0.grid(column=0, row=0)
+    lbl0.grid(column=0, row=1)
     lbl1 = Label(window, text="Выбор маленьких картинок")
-    lbl1.grid(column=0, row=1)
+    lbl1.grid(column=0, row=2)
     lbl2 = Label(window, text="Выбор звуков")
-    lbl2.grid(column=0, row=2)
+    lbl2.grid(column=0, row=3)
+    lbl3 = Label(window, text="Выбор директории выходного файла")
+    lbl3.grid(column=0, row=0)
 
     text0 = Text(width=7, height=1)
-    text0.grid(column=2, row=0)
+    text0.grid(column=2, row=1, sticky=(W))
     # text0.pack()
     text1 = Text(width=7, height=1)
-    text1.grid(column=2, row=1)
+    text1.grid(column=2, row=2, sticky=(W))
     # text1.pack()
     text2 = Text(width=7, height=1)
-    text2.grid(column=2, row=2)
+    text2.grid(column=2, row=3, sticky=(W))
     # text2.pack()
+    text3 = Text(width=70, height=1)
+    text3.grid(column=2, row=0)
 
     btn0 = Button(window, text="Выбрать", command=selectFullScreens)
-    btn0.grid(column=1, row=0)
+    btn0.grid(column=1, row=1)
     btn1 = Button(window, text="Выбрать", command=selectSmallImages)
-    btn1.grid(column=1, row=1)
+    btn1.grid(column=1, row=2)
     btn2 = Button(window, text="Выбрать", command=selectSounds)
-    btn2.grid(column=1, row=2)
+    btn2.grid(column=1, row=3)
+    btn3 = Button(window, text="Выбрать", command=selectOutputDir)
+    btn3.grid(column=1, row=0)
 
     window.mainloop()
     print_hi('PyCharm')
