@@ -64,23 +64,51 @@ def selectSmallImages():
         width = last_line[1]
         height = last_line[2]
         length = int((int(width)+1)*int(height)/2)
-        f = open(fileName)
-        raw = f.read()
+#################################################################################
+        f = open(fileName)          #   width and height became known
+        fOut = open(outputFile, 'a')
+        lines = f.readlines()
+        for line in lines:
+            for word in line.split(' '):
+                if word.startswith('0x'):
+                    line = re.findall(r'[0x]\w+', str(line))
+                    line = str(line)
+                    line = re.sub(r'\]', '', line)
+                    line = re.sub(r'\[', '', line)
+                    line = re.sub(r'0x', '', line)
+                    line = re.sub(r'\'', '', line)
+                    line = re.sub(r'\ ', '', line)
+                    fOut.writelines(line + ',')
+                    fOut.writelines('\n')
+                    # print(line)
+                    break
         f.close()
-        result = re.findall(r'[0x]\w+', raw)
-        result = result[6:len(result)]
+        complement=0
         if (length < 8192):
             print('small image')
-            result = str(result)
-            result += '0xff,'*(8192-length)
-        result = re.sub(r'0x', '', str(result))
-        result = re.sub(r'\[', '', result)
-        result = re.sub(r'\]', '', result)
-        result = re.findall(r'[^\']\w+', result)
-        print(len(result))
-        print(result)
-        # print(fileName)
-        # print(len(fileNames))
+            for i in range(1, int((8192-length)/64)+1, 1):
+                adds = ('0xff,' * 64) + '\n'
+                adds = re.sub(r'\]', '', adds)
+                adds = re.sub(r'\[', '', adds)
+                adds = re.sub(r'0x', '', adds)
+                adds = re.sub(r'\'', '', adds)
+                adds = re.sub(r'\ ', '', adds)
+                # print(adds)
+                fOut.writelines(adds)
+        for i in range(1, 256 + 1 - len(fileNames), 1):
+            for j in range(1, 128 + 1, 1):
+                adds = ('0xff,' * 64) + '\n'
+                adds = re.sub(r'\]', '', adds)
+                adds = re.sub(r'\[', '', adds)
+                adds = re.sub(r'0x', '', adds)
+                adds = re.sub(r'\'', '', adds)
+                adds = re.sub(r'\ ', '', adds)
+                # print(adds)
+                fOut.writelines(adds)
+                # fOut.writelines('\n')
+        print(i)
+        print(int(len(adds) / 5))
+    fOut.close()
     text1.insert(INSERT,'Готово')
 
 def selectSounds():
