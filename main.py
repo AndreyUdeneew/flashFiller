@@ -27,20 +27,28 @@ def selectFullScreens():
                     line = re.sub(r'0x', '', line)
                     line = re.sub(r'\'', '', line)
                     line = re.sub(r'\ ', '', line)
-                    fOut.writelines(line)
+                    fOut.writelines(line+',')
                     fOut.writelines('\n')
-                    print(line)
+                    # print(line)
                     break
         f.close()
         # print(fileName)
         # print(len(filenames))
     adds = 0
-    for i in range(256-len(fileNames)):
-        for j in range(127):
-            adds = ('0xff,'*64)+'\r\n'
+    for i in range(1, 256+1-len(fileNames), 1):
+        for j in range(1, 128+1, 1):
+            adds = ('0xff,'*64)+'\n'
+            adds = re.sub(r'\]', '', adds)
+            adds = re.sub(r'\[', '', adds)
+            adds = re.sub(r'0x', '', adds)
+            adds = re.sub(r'\'', '', adds)
+            adds = re.sub(r'\ ', '', adds)
+            # print(adds)
+            fOut.writelines(adds)
+            # fOut.writelines('\n')
     print(i)
     print(int(len(adds)/5))
-    print(adds)
+    # print(adds)
         # print(len(fileNames))
     fOut.close()
     text0.insert(INSERT, 'Готово')
