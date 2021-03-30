@@ -5,6 +5,8 @@ from tkinter import *
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from tkinter.filedialog import *
 import os
+
+
 outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
 
 def print_hi(name):
@@ -13,6 +15,7 @@ def print_hi(name):
 
 def selectFullScreens():
     fileNames = askopenfilenames(parent=window)
+    fileNames = sorted(fileNames)
     fOut = open(outputFile, 'w')
     for fileName in fileNames:
         f = open(fileName)
@@ -32,7 +35,7 @@ def selectFullScreens():
                     # print(line)
                     break
         f.close()
-        # print(fileName)
+        print(fileName)
         # print(len(filenames))
     adds = 0
     for i in range(1, 256+1-len(fileNames), 1):
@@ -56,6 +59,7 @@ def selectFullScreens():
 
 def selectSmallImages():
     fileNames = askopenfilenames(parent=window)
+    fileNames = sorted(fileNames)
     for fileName in fileNames:
         f = open(fileName)
         last_line = f.readlines()[-3]
@@ -113,6 +117,7 @@ def selectSmallImages():
 
 def selectSounds():
     fileNames = askopenfilenames(parent=window)
+    fileNames = sorted(fileNames)
     for fileName in fileNames:
         f = open(fileName)
         raw = f.read()
