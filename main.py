@@ -6,8 +6,12 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import *
 import os
+import scipy
 import wave
-
+from scipy.io import wavfile
+import numpy as np
+import soundfile as sf
+from scipy.io.wavfile import read
 
 outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
 
@@ -20,6 +24,7 @@ def selectOutputDir():
     outputFile = OutputDir+'/output2FLASH.txt'
     text3.insert(INSERT, outputFile)
     return outputFile
+    outputFile = 'C:/Users/Stasy/Desktop/output2FLASH.txt'
 
 def selectFullScreens():
     fileNames = askopenfilenames(parent=window)
@@ -73,13 +78,19 @@ def selectSmallImages():
         last_line = f.readlines()[-3]
         f.close()
         last_line = re.split(r',', last_line)
-        width = last_line[1]
-        height = last_line[2]
-        length = int((int(width)+1)*int(height)/2)
+        height = last_line[1]
+        width = last_line[2]
+        length = int((int(height)+1)*int(width)/2)
+        height = int(height)
+        width = int(width)
+        height = format(height, "x")
+        width = format(width, "x")
 #################################################################################
         f = open(fileName)          #   width and height became known
         fOut = open(outputFile, 'a')
         lines = f.readlines()
+        imDimensions = str(width) + ',' + str(height) + ',\n'
+        fOut.writelines(imDimensions)
         for line in lines:
             for word in line.split(' '):
                 if word.startswith('0x'):
@@ -98,6 +109,7 @@ def selectSmallImages():
         complement=0
         if (length < 8192):
             print('small image')
+            print(fileName)
             for i in range(1, int((8192-length)/64)+1, 1):
                 complement = ('0xff,' * 64) + '\n'
                 complement = re.sub(r'\]', '', complement)
@@ -118,24 +130,59 @@ def selectSmallImages():
             # print(adds)
             fOut.writelines(adds)
             # fOut.writelines('\n')
-    print(i)
-    print(n)
+    # print(n)
     fOut.close()
     text1.insert(INSERT,'Готово')
 
 def selectSounds():
+    types = {
+        1: np.int8,
+        2: np.int16,
+        4: np.int32
+    }
     fileNames = askopenfilenames(parent=window)
     fileNames = sorted(fileNames)
+    fOut = open(outputFile, 'a')
     for fileName in fileNames:
-        wav = wave.open(fileName, mode="r")
-        (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
-        sound = wav.readframes(nframes)
+        # f = open(fileName)
+
+
+        # rate, data = scipy.io.wavfile.read(fileName)
+        # print(rate)
+        # np.savetxt('sample.csv', data, delimiter=',')
+        frames=''
+        # wav = wave.open(fileName, mode="r")
+        # (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
+        # for i in range(nframes):
+        #     frame = wav.readframes(1)
+        #     # frames+=frame
+        #     print(frame)
+
+        data, fs = sf.read(fileName)
+        for i in range(nframes):
+            frame = wav.readframes(1)
+        print(frame)
+
+
+        # content = wav.readframes(nframes)
+        # content = str(content)
+        # samples = np.fromstring(content, dtype=types[sampwidth])
+        # for n in range(nchannels):
+        #     channel = samples[n::nchannels]
+
+
+        # print(content)
+        # print(fileName)
+        # print('length='+str(nframes))
+        # print('compname=' + str(compname))
+        # print('comptype=' + str(comptype))
+        # print('N channels=' + str(nchannels))
+        # print('sample width='+str(sampwidth))
+        # print('framerate='+str(framerate))
+        fOut.writelines(content)
+        fOut.writelines('\n')
         wav.close()
-        print(sound)
-        print(fileName)
-        print(nframes)
-        print(sampwidth)
-        print(framerate)
+    fOut.close()
     text2.insert(INSERT, 'Готово')
 
 # Press the green button in the gutter to run the script.
