@@ -13,7 +13,7 @@ import numpy as np
 import soundfile as sf
 from scipy.io.wavfile import read
 
-outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
+# outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -23,10 +23,11 @@ def selectOutputDir():
     OutputDir = filedialog.askdirectory(parent=window)
     outputFile = OutputDir+'/output2FLASH.txt'
     text3.insert(INSERT, outputFile)
-    return outputFile
-    outputFile = 'C:/Users/Stasy/Desktop/output2FLASH.txt'
+    # return outputFile
+    # outputFile = 'C:/Users/Stasy/Desktop/output2FLASH.txt'
 
 def selectFullScreens():
+    outputFile = format(text3.get("1.0", 'end-1c'))
     fileNames = askopenfilenames(parent=window)
     fileNames = sorted(fileNames)
     fOut = open(outputFile, 'w')
@@ -53,10 +54,10 @@ def selectFullScreens():
     adds = 0
     for i in range(1, 256+1-len(fileNames), 1):
         for j in range(1, 128+1, 1):
-            adds = ('0xff,'*64)+'\n'
+            adds = ('ff,'*64)+'\n'
             adds = re.sub(r'\]', '', adds)
             adds = re.sub(r'\[', '', adds)
-            adds = re.sub(r'0x', '', adds)
+            # adds = re.sub(r'0x', '', adds)
             adds = re.sub(r'\'', '', adds)
             adds = re.sub(r'\ ', '', adds)
             # print(adds)
@@ -71,6 +72,7 @@ def selectFullScreens():
 
 
 def selectSmallImages():
+    outputFile = format(text3.get("1.0", 'end-1c'))
     fileNames = askopenfilenames(parent=window)
     fileNames = sorted(fileNames)
     for fileName in fileNames:
@@ -80,9 +82,12 @@ def selectSmallImages():
         last_line = re.split(r',', last_line)
         height = last_line[1]
         width = last_line[2]
-        length = int((int(height)+1)*int(width)/2)
         height = int(height)
         width = int(width)
+        if (height % 2) != 0:
+            height += 1
+        length = int(int(height) * int(width) / 2)
+        length += 2
         height = format(height, "x")
         width = format(width, "x")
 #################################################################################
@@ -110,21 +115,32 @@ def selectSmallImages():
         if (length < 8192):
             print('small image')
             print(fileName)
-            for i in range(1, int((8192-length)/64)+1, 1):
-                complement = ('0xff,' * 64) + '\n'
+            for i in range(1, int((8192 - length)/64)+1, 1):
+                complement = ('ff,' * 64) + '\n'
                 complement = re.sub(r'\]', '', complement)
                 complement = re.sub(r'\[', '', complement)
-                complement = re.sub(r'0x', '', complement)
+                # complement = re.sub(r'0x', '', complement)
                 complement = re.sub(r'\'', '', complement)
                 complement = re.sub(r'\ ', '', complement)
                 # print(adds)
                 fOut.writelines(complement)
+            nComplements = 64*i
+            nAddComplements = 8192 - length - nComplements
+            print(nComplements + int(length)+nAddComplements)
+            if (nComplements+length)<8192:
+                complement = ('ff,'*nAddComplements)+'\n'
+                complement = re.sub(r'\]', '', complement)
+                complement = re.sub(r'\[', '', complement)
+                complement = re.sub(r'\'', '', complement)
+                complement = re.sub(r'\ ', '', complement)
+                fOut.writelines(complement)
+            # print(i)
     for m in range(1, 256 + 1 - len(fileNames), 1):
         for n in range(1, 128 + 1, 1):
-            adds = ('0xff,' * 64) + '\n'
+            adds = ('ff,' * 64) + '\n'
             adds = re.sub(r'\]', '', adds)
             adds = re.sub(r'\[', '', adds)
-            adds = re.sub(r'0x', '', adds)
+            # adds = re.sub(r'0x', '', adds)
             adds = re.sub(r'\'', '', adds)
             adds = re.sub(r'\ ', '', adds)
             # print(adds)
@@ -135,6 +151,7 @@ def selectSmallImages():
     text1.insert(INSERT,'Готово')
 
 def selectSounds():
+    outputFile = format(text3.get("1.0", 'end-1c'))
     types = {
         1: np.int8,
         2: np.int16,
@@ -144,41 +161,29 @@ def selectSounds():
     fileNames = sorted(fileNames)
     fOut = open(outputFile, 'a')
     for fileName in fileNames:
-        # f = open(fileName)
-
-
-        # rate, data = scipy.io.wavfile.read(fileName)
-        # print(rate)
-        # np.savetxt('sample.csv', data, delimiter=',')
         frames=''
-        # wav = wave.open(fileName, mode="r")
-        # (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
-        # for i in range(nframes):
-        #     frame = wav.readframes(1)
-        #     # frames+=frame
-        #     print(frame)
+        wav = wave.open(fileName, mode="r")
+        (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
 
-        data, fs = sf.read(fileName)
-        for i in range(nframes):
-            frame = wav.readframes(1)
-        print(frame)
-
-
-        # content = wav.readframes(nframes)
-        # content = str(content)
-        # samples = np.fromstring(content, dtype=types[sampwidth])
-        # for n in range(nchannels):
-        #     channel = samples[n::nchannels]
-
-
-        # print(content)
-        # print(fileName)
+        content = wav.readframes(nframes)
+        content = str(content)
+        content = re.findall(r'[x]\w+', str(content))
+        content = str(content)
+        content = re.sub(r'\]', '', content)
+        content = re.sub(r'\[', '', content)
+        content = re.sub(r'x', '', content)
+        content = re.sub(r'\'', '', content)
+        content = re.sub(r'\ ', '', content)
+        print(content)
+        print(fileName)
         # print('length='+str(nframes))
-        # print('compname=' + str(compname))
-        # print('comptype=' + str(comptype))
-        # print('N channels=' + str(nchannels))
-        # print('sample width='+str(sampwidth))
-        # print('framerate='+str(framerate))
+        nframes = format(nframes, 'x')
+        print(nframes)
+        print('compname=' + str(compname))
+        print('comptype=' + str(comptype))
+        print('N channels=' + str(nchannels))
+        print('sample width='+str(sampwidth))
+        print('framerate='+str(framerate))
         fOut.writelines(content)
         fOut.writelines('\n')
         wav.close()
