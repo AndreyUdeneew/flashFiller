@@ -160,6 +160,21 @@ def selectSounds():
     fileNames = askopenfilenames(parent=window)
     fileNames = sorted(fileNames)
     fOut = open(outputFile, 'a')
+
+    # for n in range(1, 262144 + 1, 1):
+    #     adds = ('ff,' * 64) + '\n'
+    #     adds = re.sub(r'\]', '', adds)
+    #     adds = re.sub(r'\[', '', adds)
+    #     # adds = re.sub(r'0x', '', adds)
+    #     adds = re.sub(r'\'', '', adds)
+    #     adds = re.sub(r'\ ', '', adds)
+    #     # print(adds)
+    #     fOut.writelines(adds)
+
+    soundNum = -1
+    
+    prevAddr = 0x01400900
+    
     for fileName in fileNames:
         frames=''
         wav = wave.open(fileName, mode="r")
@@ -176,8 +191,30 @@ def selectSounds():
         content = re.sub(r'\ ', '', content)
         print(content)
         print(fileName)
-        # print('length='+str(nframes))
-        nframes = format(nframes, 'x')
+
+        soundNum = soundNum + 1
+        soundNumHex = hex(soundNum)
+        print(soundNumHex)
+        soundNumHex = int(soundNumHex, base=16)
+        soundNumHex = format(int(soundNumHex), 'x')
+        print(soundNumHex)
+
+        nframes_3 = hex((nframes >> 24) & 0xFF)
+        nframes_2 = hex((nframes >> 16) & 0xFF)
+        nframes_1 = hex((nframes >> 8) & 0xFF)
+        nframes_0 = hex((nframes >> 0) & 0xFF)
+        nframes_3 = int(nframes_3, base=16)
+        nframes_2 = int(nframes_2, base=16)
+        nframes_1 = int(nframes_1, base=16)
+        nframes_0 = int(nframes_0, base=16)
+        nframes_3 = format(nframes_3, "x")
+        nframes_2 = format(nframes_2, "x")
+        nframes_1 = format(nframes_1, "x")
+        nframes_0 = format(nframes_0, "x")
+        print(nframes_3)
+        print(nframes_2)
+        print(nframes_1)
+        print(nframes_0)
         print(nframes)
         print('compname=' + str(compname))
         print('comptype=' + str(comptype))
