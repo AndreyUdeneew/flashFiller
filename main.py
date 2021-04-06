@@ -160,45 +160,34 @@ def selectSounds():
     fileNames = askopenfilenames(parent=window)
     fileNames = sorted(fileNames)
     fOut = open(outputFile, 'a')
-
-    # for n in range(1, 262144 + 1, 1):
-    #     adds = ('ff,' * 64) + '\n'
-    #     adds = re.sub(r'\]', '', adds)
-    #     adds = re.sub(r'\[', '', adds)
-    #     # adds = re.sub(r'0x', '', adds)
-    #     adds = re.sub(r'\'', '', adds)
-    #     adds = re.sub(r'\ ', '', adds)
-    #     # print(adds)
-    #     fOut.writelines(adds)
+#################Adding adds after images before sounds##########################################
+    for n in range(1, 262144 + 1, 1):
+        adds = ('ff,' * 64) + '\n'
+        adds = re.sub(r'\]', '', adds)
+        adds = re.sub(r'\[', '', adds)
+        # adds = re.sub(r'0x', '', adds)
+        adds = re.sub(r'\'', '', adds)
+        adds = re.sub(r'\ ', '', adds)
+        # print(adds)
+        fOut.writelines(adds)
 
     soundNum = -1
-    
     prevAddr = 0x01400900
-    
+    prevAddr = 20973824
+
     for fileName in fileNames:
         frames=''
         wav = wave.open(fileName, mode="r")
         (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
-
-        content = wav.readframes(nframes)
-        content = str(content)
-        content = re.findall(r'[x]\w+', str(content))
-        content = str(content)
-        content = re.sub(r'\]', '', content)
-        content = re.sub(r'\[', '', content)
-        content = re.sub(r'x', '', content)
-        content = re.sub(r'\'', '', content)
-        content = re.sub(r'\ ', '', content)
-        print(content)
         print(fileName)
-
+###############################################  soundNum obtaining ###############################
         soundNum = soundNum + 1
         soundNumHex = hex(soundNum)
-        print(soundNumHex)
+        print('soundNum='+str(soundNumHex))
         soundNumHex = int(soundNumHex, base=16)
         soundNumHex = format(int(soundNumHex), 'x')
-        print(soundNumHex)
-
+        print('soundNum='+str(soundNumHex))
+################################################ length of sounв obtaining ########################
         nframes_3 = hex((nframes >> 24) & 0xFF)
         nframes_2 = hex((nframes >> 16) & 0xFF)
         nframes_1 = hex((nframes >> 8) & 0xFF)
@@ -211,17 +200,64 @@ def selectSounds():
         nframes_2 = format(nframes_2, "x")
         nframes_1 = format(nframes_1, "x")
         nframes_0 = format(nframes_0, "x")
-        print(nframes_3)
-        print(nframes_2)
-        print(nframes_1)
-        print(nframes_0)
-        print(nframes)
-        print('compname=' + str(compname))
-        print('comptype=' + str(comptype))
-        print('N channels=' + str(nchannels))
-        print('sample width='+str(sampwidth))
-        print('framerate='+str(framerate))
-        fOut.writelines(content)
+        print('nframes_3=' + str(nframes_3))
+        print('nframes_2=' + str(nframes_2))
+        print('nframes_1=' + str(nframes_1))
+        print('nframes_0=' + str(nframes_0))
+        print('nframes=' + str(nframes))
+        # print('compname=' + str(compname))
+        # print('comptype=' + str(comptype))
+        # print('N channels=' + str(nchannels))
+        # print('sample width='+str(sampwidth))
+        # print('framerate='+str(framerate))
+##################################################### current address obtaining #####################
+        currAddr = prevAddr                         # bubble
+        currAddr_3 = hex((currAddr >> 24) & 0xFF)
+        currAddr_2 = hex((currAddr >> 16) & 0xFF)
+        currAddr_1 = hex((currAddr >> 8) & 0xFF)
+        currAddr_0 = hex((currAddr >> 0) & 0xFF)
+        currAddr_3 = int(currAddr_3, base=16)
+        currAddr_2 = int(currAddr_2, base=16)
+        currAddr_1 = int(currAddr_1, base=16)
+        currAddr_0 = int(currAddr_0, base=16)
+        currAddr_3 = format(currAddr_3, "x")
+        currAddr_2 = format(currAddr_2, "x")
+        currAddr_1 = format(currAddr_1, "x")
+        currAddr_0 = format(currAddr_0, "x")
+        print('currAddr_3=' + str(currAddr_3))
+        print('currAddr_2=' + str(currAddr_2))
+        print('currAddr_1=' + str(currAddr_1))
+        print('currAddr_0=' + str(currAddr_0))
+        print('currAddr=' + str(currAddr))
+        prevAddr = currAddr + nframes               # bubble
+##################################################### write info to infoPage ########################
+        fOut.writelines(str(soundNumHex)+','+str(currAddr_3)+','+str(currAddr_2)+','+str(currAddr_1)+','
+                        +str(currAddr_0)+','+str(nframes_3)+','+str(nframes_2)+','+str(nframes_1)+','
+                        +str(nframes_0)+',')
+        fOut.writelines('\n')
+##################################################### write adds after soundInfo to output file #####
+    if len(fileNames)<256:
+        nSoundComplements = (256 - len(fileNames)) * 9
+        soundComplement = ('ff,' + '\n' )
+        for i in range(1, nSoundComplements+1, 1):
+            fOut.writelines(soundComplement)
+##################################################### write content to output file ##################
+    for fileName_ in fileNames:
+        print(fileName_)
+        frames = ''
+        wav = wave.open(fileName_, mode="r")
+        (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()
+        content = wav.readframes(nframes)
+        content = str(content)
+        content = re.findall(r'[x]\w+', str(content))
+        content = str(content)
+        content = re.sub(r'\]', '', content)
+        content = re.sub(r'\[', '', content)
+        content = re.sub(r'x', '', content)
+        content = re.sub(r'\'', '', content)
+        content = re.sub(r'\ ', '', content)
+        # print(content)
+        fOut.writelines(content + ',')
         fOut.writelines('\n')
         wav.close()
     fOut.close()
