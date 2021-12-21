@@ -6,12 +6,12 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import *
 import os
-import scipy
-import wave
-from scipy.io import wavfile
+# import scipy
+# import wave
+# from scipy.io import wavfile
 import numpy as np
-import soundfile as sf
-from scipy.io.wavfile import read
+# import soundfile as sf
+# from scipy.io.wavfile import read
 
 # outputFile = "C:/Users/Stasy/Desktop/output2FLASH.txt"
 
@@ -41,6 +41,7 @@ def selectFullScreens():
                     line = str(line)
                     line = re.sub(r'\]', '', line)
                     line = re.sub(r'\[', '', line)
+
                     line = re.sub(r'0x', '', line)
                     line = re.sub(r'\'', '', line)
                     line = re.sub(r'\ ', '', line)
