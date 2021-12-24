@@ -21,7 +21,7 @@ def print_hi(name):
 
 def selectOutputDir():
     OutputDir = filedialog.askdirectory(parent=window)
-    outputFile = OutputDir+'/output2FLASH.txt'
+    outputFile = OutputDir+'/output2FLASH.bin'
     text3.insert(INSERT, outputFile)
     # return outputFile
     # outputFile = 'C:/Users/Stasy/Desktop/output2FLASH.txt'
@@ -30,7 +30,8 @@ def selectFullScreens():
     outputFile = format(text3.get("1.0", 'end-1c'))
     fileNames = askopenfilenames(parent=window)
     fileNames = sorted(fileNames)
-    fOut = open(outputFile, 'w')
+    # fOut = open(outputFile, 'w')
+    fOut = open(outputFile, 'wb')
     for fileName in fileNames:
         f = open(fileName)
         lines = f.readlines()
@@ -38,16 +39,31 @@ def selectFullScreens():
             for word in line.split(' '):
                 if word.startswith('0x'):
                     line = re.findall(r'[0x]\w+', str(line))
+                    # line_4_bin = re.findall(r'[0x]\w+', str(line))
+                    length_of_string=len(re.findall(r'[0x]\w+', str(line)))
                     line = str(line)
+                    print(line)
                     line = re.sub(r'\]', '', line)
                     line = re.sub(r'\[', '', line)
 
-                    line = re.sub(r'0x', '', line)
+                    # line = re.sub(r'0x', '', line)
                     line = re.sub(r'\'', '', line)
                     line = re.sub(r'\ ', '', line)
-                    fOut.writelines(line+',')
-                    fOut.writelines('\n')
-                    # print(line)
+                    # fOut.writelines(line+',')
+                    # fOut.writelines('\n')
+                    line = str(line)
+                    print(line)
+                    values=line.split(",")
+                    line = str(line)
+                    print(values)
+                    print(type(values))
+
+                    ############################################################################### bin ############
+                    bytes=[]
+                    for i in range(length_of_string):
+                        bytes.append(int((values[i]), base=16))
+                    for i in range(length_of_string):
+                        fOut.write(int.to_bytes(bytes[i],1,byteorder='big'))
                     break
         f.close()
         print(fileName)
