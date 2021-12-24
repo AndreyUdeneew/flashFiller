@@ -42,7 +42,7 @@ def selectFullScreens():
                     # line_4_bin = re.findall(r'[0x]\w+', str(line))
                     length_of_string=len(re.findall(r'[0x]\w+', str(line)))
                     line = str(line)
-                    print(line)
+                    # print(line)
                     line = re.sub(r'\]', '', line)
                     line = re.sub(r'\[', '', line)
 
@@ -52,11 +52,11 @@ def selectFullScreens():
                     # fOut.writelines(line+',')
                     # fOut.writelines('\n')
                     line = str(line)
-                    print(line)
+                    # print(line)
                     values=line.split(",")
                     line = str(line)
-                    print(values)
-                    print(type(values))
+                    # print(values)
+                    # print(type(values))
 
                     ############################################################################### bin ############
                     bytes=[]
@@ -78,12 +78,16 @@ def selectFullScreens():
             adds = re.sub(r'\'', '', adds)
             adds = re.sub(r'\ ', '', adds)
             # print(adds)
-            fOut.writelines(adds)
+            # fOut.writelines(adds)
             # fOut.writelines('\n')
     print(i)
     print(int(len(adds)/5))
     # print(adds)
         # print(len(fileNames))
+    add='0xff'
+    add=int(add,base=16)
+    # for i in range((256-len(fileNames))*8192):
+    #     fOut.write(int.to_bytes(add, 1, byteorder='big'))
     fOut.close()
     text0.insert(INSERT, 'Готово')
 
@@ -283,7 +287,7 @@ def selectSounds():
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     window = Tk()
-    window.geometry('900x100')
+    window.geometry('1100x100')
     window.title("flashFiller")
 
     lbl0 = Label(window, text="Выбор полноэкранных картинок")
@@ -304,7 +308,7 @@ if __name__ == '__main__':
     text2 = Text(width=7, height=1)
     text2.grid(column=2, row=3, sticky=(W))
     # text2.pack()
-    text3 = Text(width=70, height=1)
+    text3 = Text(width=100, height=1)
     text3.grid(column=2, row=0)
 
     btn0 = Button(window, text="Выбрать", command=selectFullScreens)
