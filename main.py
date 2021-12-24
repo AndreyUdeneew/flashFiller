@@ -39,7 +39,6 @@ def selectFullScreens():
             for word in line.split(' '):
                 if word.startswith('0x'):
                     line = re.findall(r'[0x]\w+', str(line))
-                    # line_4_bin = re.findall(r'[0x]\w+', str(line))
                     length_of_string=len(re.findall(r'[0x]\w+', str(line)))
                     line = str(line)
                     # print(line)
@@ -54,7 +53,7 @@ def selectFullScreens():
                     line = str(line)
                     # print(line)
                     values=line.split(",")
-                    line = str(line)
+                    # line = str(line)
                     # print(values)
                     # print(type(values))
 
@@ -68,26 +67,26 @@ def selectFullScreens():
         f.close()
         print(fileName)
         # print(len(filenames))
-    adds = 0
-    for i in range(1, 256+1-len(fileNames), 1):
-        for j in range(1, 128+1, 1):
-            adds = ('ff,'*64)+'\n'
-            adds = re.sub(r'\]', '', adds)
-            adds = re.sub(r'\[', '', adds)
-            # adds = re.sub(r'0x', '', adds)
-            adds = re.sub(r'\'', '', adds)
-            adds = re.sub(r'\ ', '', adds)
-            # print(adds)
-            # fOut.writelines(adds)
-            # fOut.writelines('\n')
-    print(i)
-    print(int(len(adds)/5))
+    # adds = 0
+    # for i in range(1, 256+1-len(fileNames), 1):
+    #     for j in range(1, 128+1, 1):
+    #         adds = ('ff,'*64)+'\n'
+    #         adds = re.sub(r'\]', '', adds)
+    #         adds = re.sub(r'\[', '', adds)
+    #         # adds = re.sub(r'0x', '', adds)
+    #         adds = re.sub(r'\'', '', adds)
+    #         adds = re.sub(r'\ ', '', adds)
+    #         # print(adds)
+    #         # fOut.writelines(adds)
+    #         # fOut.writelines('\n')
+    # print(i)
+    # print(int(len(adds)/5))
     # print(adds)
         # print(len(fileNames))
     add='0xff'
     add=int(add,base=16)
-    # for i in range((256-len(fileNames))*8192):
-    #     fOut.write(int.to_bytes(add, 1, byteorder='big'))
+    for i in range((256-len(fileNames))*8192):
+        fOut.write(int.to_bytes(add, 1, byteorder='big'))
     fOut.close()
     text0.insert(INSERT, 'Готово')
 
@@ -103,71 +102,89 @@ def selectSmallImages():
         last_line = re.split(r',', last_line)
         height = last_line[1]
         width = last_line[2]
-        height = int(height)
-        width = int(width)
+        height = int(height, base=16)
+        width = int(width, base=16)
         if (height % 2) != 0:
             height += 1
         length = int(int(height) * int(width) / 2)
         length += 2
-        height = format(height, "x")
-        width = format(width, "x")
+        # height = format(height, "x")
+        # width = format(width, "x")
 #################################################################################
         f = open(fileName)          #   width and height became known
-        fOut = open(outputFile, 'a')
+        fOut = open(outputFile, 'ab')
         lines = f.readlines()
-        imDimensions = str(width) + ',' + str(height) + ',\n'
-        fOut.writelines(imDimensions)
+        fOut.write(int.to_bytes(width, 1, byteorder='big'))
+        fOut.write(int.to_bytes(height, 1, byteorder='big'))
+        # imDimensions = str(width) + ',' + str(height) + ',\n'
+        # fOut.writelines(imDimensions)
         for line in lines:
             for word in line.split(' '):
                 if word.startswith('0x'):
                     line = re.findall(r'[0x]\w+', str(line))
+                    length_of_string = len(re.findall(r'[0x]\w+', str(line)))
                     line = str(line)
                     line = re.sub(r'\]', '', line)
                     line = re.sub(r'\[', '', line)
-                    line = re.sub(r'0x', '', line)
+                    # line = re.sub(r'0x', '', line)
                     line = re.sub(r'\'', '', line)
                     line = re.sub(r'\ ', '', line)
-                    fOut.writelines(line + ',')
-                    fOut.writelines('\n')
+                    # fOut.writelines(line + ',')
+                    # fOut.writelines('\n')
                     # print(line)
+                    values = line.split(",")
+                    bytes = []
+                    for i in range(length_of_string):
+                        bytes.append(int((values[i]), base=16))
+                    for i in range(length_of_string):
+                        fOut.write(int.to_bytes(bytes[i], 1, byteorder='big'))
                     break
         f.close()
-        complement=0
+        # complement=0
         if (length < 8192):
             print('small image')
             print(fileName)
-            for i in range(1, int((8192 - length)/64)+1, 1):
-                complement = ('ff,' * 64) + '\n'
-                complement = re.sub(r'\]', '', complement)
-                complement = re.sub(r'\[', '', complement)
-                # complement = re.sub(r'0x', '', complement)
-                complement = re.sub(r'\'', '', complement)
-                complement = re.sub(r'\ ', '', complement)
+            complement = '0xff'
+            complement = int(complement, base=16)
+            for i in range(8192-length):
+                fOut.write(int.to_bytes(complement, 1, byteorder='big'))
+            # for i in range(1, int((8192 - length)/64)+1, 1):
+                # complement = ('ff,' * 64) + '\n'
+                # complement = re.sub(r'\]', '', complement)
+                # complement = re.sub(r'\[', '', complement)
+                # # complement = re.sub(r'0x', '', complement)
+                # complement = re.sub(r'\'', '', complement)
+                # complement = re.sub(r'\ ', '', complement)
                 # print(adds)
-                fOut.writelines(complement)
-            nComplements = 64*i
-            nAddComplements = 8192 - length - nComplements
-            print(nComplements + int(length)+nAddComplements)
-            if (nComplements+length)<8192:
-                complement = ('ff,'*nAddComplements)+'\n'
-                complement = re.sub(r'\]', '', complement)
-                complement = re.sub(r'\[', '', complement)
-                complement = re.sub(r'\'', '', complement)
-                complement = re.sub(r'\ ', '', complement)
-                fOut.writelines(complement)
+            #     fOut.writelines(complement)
+            # nComplements = 64*i
+            # nAddComplements = 8192 - length - nComplements
+            # print(nComplements + int(length)+nAddComplements)
+            #
+            # if (nComplements+length)<8192:
+            #     complement = ('ff,'*nAddComplements)+'\n'
+            #     complement = re.sub(r'\]', '', complement)
+            #     complement = re.sub(r'\[', '', complement)
+            #     complement = re.sub(r'\'', '', complement)
+            #     complement = re.sub(r'\ ', '', complement)
+            #     fOut.writelines(complement)
             # print(i)
-    for m in range(1, 256 + 1 - len(fileNames), 1):
-        for n in range(1, 128 + 1, 1):
-            adds = ('ff,' * 64) + '\n'
-            adds = re.sub(r'\]', '', adds)
-            adds = re.sub(r'\[', '', adds)
-            # adds = re.sub(r'0x', '', adds)
-            adds = re.sub(r'\'', '', adds)
-            adds = re.sub(r'\ ', '', adds)
-            # print(adds)
-            fOut.writelines(adds)
-            # fOut.writelines('\n')
-    # print(n)
+            adds = '0xff'
+            adds = int(adds, base=16)
+            for i in range((256-len(fileNames))*8192):
+                fOut.write(int.to_bytes(adds, 1, byteorder='big'))
+    # for m in range(1, 256 + 1 - len(fileNames), 1):
+    #     for n in range(1, 128 + 1, 1):
+    #         adds = ('ff,' * 64) + '\n'
+    #         adds = re.sub(r'\]', '', adds)
+    #         adds = re.sub(r'\[', '', adds)
+    #         # adds = re.sub(r'0x', '', adds)
+    #         adds = re.sub(r'\'', '', adds)
+    #         adds = re.sub(r'\ ', '', adds)
+    #         # print(adds)
+    #         fOut.writelines(adds)
+    #         # fOut.writelines('\n')
+    # # print(n)
     fOut.close()
     text1.insert(INSERT,'Готово')
 
@@ -182,15 +199,19 @@ def selectSounds():
     fileNames = sorted(fileNames)
     fOut = open(outputFile, 'a')
 #################Adding adds after images before sounds##########################################
-    for n in range(1, 262144 + 1, 1):
-        adds = ('ff,' * 64) + '\n'
-        adds = re.sub(r'\]', '', adds)
-        adds = re.sub(r'\[', '', adds)
-        # adds = re.sub(r'0x', '', adds)
-        adds = re.sub(r'\'', '', adds)
-        adds = re.sub(r'\ ', '', adds)
-        # print(adds)
-        fOut.writelines(adds)
+    adds = '0xff'
+    adds = int(adds, base=16)
+    for n in range(262144*64):
+        fOut.write(int.to_bytes(adds, 1, byteorder='big'))
+    # for n in range(1, 262144 + 1, 1):
+    #     adds = ('ff,' * 64) + '\n'
+    #     adds = re.sub(r'\]', '', adds)
+    #     adds = re.sub(r'\[', '', adds)
+    #     # adds = re.sub(r'0x', '', adds)
+    #     adds = re.sub(r'\'', '', adds)
+    #     adds = re.sub(r'\ ', '', adds)
+    #     # print(adds)
+    #     fOut.writelines(adds)
 
     soundNum = -1
     prevAddr = 0x01400900
