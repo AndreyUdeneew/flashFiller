@@ -61,9 +61,9 @@ def selectFullScreens():
                     bytes=[]
                     for i in range(length_of_string):
                         bytes.append(int((values[i]), base=16))
-                    for i in range(length_of_string):
-                        fOut.write(int.to_bytes(bytes[i],1,byteorder='big'))
-                    break
+                    # for i in range(length_of_string):
+                    #     fOut.write(int.to_bytes(bytes[i],1,byteorder='big'))
+                    # break
         f.close()
         print(fileName)
         # print(len(filenames))
@@ -85,33 +85,49 @@ def selectFullScreens():
         # print(len(fileNames))
     add='0xff'
     add=int(add,base=16)
-    for i in range((256-len(fileNames))*8192):
-        fOut.write(int.to_bytes(add, 1, byteorder='big'))
+    # for i in range((256-len(fileNames))*8192):
+    #     fOut.write(int.to_bytes(add, 1, byteorder='big'))
     fOut.close()
     text0.insert(INSERT, 'Готово')
 
 
 def selectSmallImages():
     outputFile = format(text3.get("1.0", 'end-1c'))
-    fileNames = askopenfilenames(parent=window)
-    fileNames = sorted(fileNames)
-    for fileName in fileNames:
-        f = open(fileName)
+    fileNamesSmall = askopenfilenames(parent=window)
+    fileNamesSmall = sorted(fileNamesSmall)
+    print(len(fileNamesSmall))
+    for fileNameSmall in fileNamesSmall:
+        f = open(fileNameSmall)
         last_line = f.readlines()[-3]
         f.close()
         last_line = re.split(r',', last_line)
+        print(last_line)
         height = last_line[1]
         width = last_line[2]
+        print(width)
+        print(height)
+        print(type(width))
+        print(type(height))
         height = int(height, base=16)
         width = int(width, base=16)
         if (height % 2) != 0:
             height += 1
         length = int(int(height) * int(width) / 2)
         length += 2
+
         # height = format(height, "x")
         # width = format(width, "x")
+        width=hex(width)
+        height=hex(height)
+        width = int(width, base=16)
+        height = int(height, base=16)
+        print(width)
+        print(height)
+        print(type(width))
+        print(type(height))
+
 #################################################################################
-        f = open(fileName)          #   width and height became known
+        f = open(fileNameSmall)          #   width and height became known
         fOut = open(outputFile, 'ab')
         lines = f.readlines()
         fOut.write(int.to_bytes(width, 1, byteorder='big'))
@@ -134,20 +150,20 @@ def selectSmallImages():
                     # print(line)
                     values = line.split(",")
                     bytes = []
-                    for i in range(length_of_string):
-                        bytes.append(int((values[i]), base=16))
-                    for i in range(length_of_string):
-                        fOut.write(int.to_bytes(bytes[i], 1, byteorder='big'))
+                    # for i in range(length_of_string):
+                    #     bytes.append(int((values[i]), base=16))
+                    # for i in range(length_of_string):
+                    #     fOut.write(int.to_bytes(bytes[i], 1, byteorder='big'))
                     break
         f.close()
         # complement=0
         if (length < 8192):
             print('small image')
-            print(fileName)
+            print(fileNameSmall)
             complement = '0xff'
             complement = int(complement, base=16)
-            for i in range(8192-length):
-                fOut.write(int.to_bytes(complement, 1, byteorder='big'))
+            # for i in range(8192-length):
+            #     fOut.write(int.to_bytes(complement, 1, byteorder='big'))
             # for i in range(1, int((8192 - length)/64)+1, 1):
                 # complement = ('ff,' * 64) + '\n'
                 # complement = re.sub(r'\]', '', complement)
@@ -171,8 +187,8 @@ def selectSmallImages():
             # print(i)
             adds = '0xff'
             adds = int(adds, base=16)
-            for i in range((256-len(fileNames))*8192):
-                fOut.write(int.to_bytes(adds, 1, byteorder='big'))
+            # for i in range((256-len(fileNames))*8192):
+            #     fOut.write(int.to_bytes(adds, 1, byteorder='big'))
     # for m in range(1, 256 + 1 - len(fileNames), 1):
     #     for n in range(1, 128 + 1, 1):
     #         adds = ('ff,' * 64) + '\n'
