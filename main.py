@@ -61,9 +61,9 @@ def selectFullScreens():
                     bytes=[]
                     for i in range(length_of_string):
                         bytes.append(int((values[i]), base=16))
-                    # for i in range(length_of_string):
-                    #     fOut.write(int.to_bytes(bytes[i],1,byteorder='big'))
-                    # break
+                    for i in range(length_of_string):
+                        fOut.write(int.to_bytes(bytes[i],1,byteorder='big'))
+                    break
         f.close()
         print(fileName)
         # print(len(filenames))
@@ -85,8 +85,8 @@ def selectFullScreens():
         # print(len(fileNames))
     add='0xff'
     add=int(add,base=16)
-    # for i in range((256-len(fileNames))*8192):
-    #     fOut.write(int.to_bytes(add, 1, byteorder='big'))
+    for i in range((256-len(fileNames))*8192):
+        fOut.write(int.to_bytes(add, 1, byteorder='big'))
     fOut.close()
     text0.insert(INSERT, 'Готово')
 
@@ -108,8 +108,12 @@ def selectSmallImages():
         print(height)
         print(type(width))
         print(type(height))
-        height = int(height, base=16)
-        width = int(width, base=16)
+        height = int(height, base=10)
+        width = int(width, base=10)
+        print(width)
+        print(height)
+        print(type(width))
+        print(type(height))
         if (height % 2) != 0:
             height += 1
         length = int(int(height) * int(width) / 2)
@@ -117,14 +121,14 @@ def selectSmallImages():
 
         # height = format(height, "x")
         # width = format(width, "x")
-        width=hex(width)
-        height=hex(height)
-        width = int(width, base=16)
-        height = int(height, base=16)
-        print(width)
-        print(height)
-        print(type(width))
-        print(type(height))
+        # width=hex(width)
+        # height=hex(height)
+        # width = int(width, base=10)
+        # height = int(height, base=10)
+        # print(width)
+        # print(height)
+        # print(type(width))
+        # print(type(height))
 
 #################################################################################
         f = open(fileNameSmall)          #   width and height became known
@@ -150,10 +154,10 @@ def selectSmallImages():
                     # print(line)
                     values = line.split(",")
                     bytes = []
-                    # for i in range(length_of_string):
-                    #     bytes.append(int((values[i]), base=16))
-                    # for i in range(length_of_string):
-                    #     fOut.write(int.to_bytes(bytes[i], 1, byteorder='big'))
+                    for i in range(length_of_string):
+                        bytes.append(int((values[i]), base=16))
+                    for i in range(length_of_string):
+                        fOut.write(int.to_bytes(bytes[i], 1, byteorder='big'))
                     break
         f.close()
         # complement=0
@@ -162,8 +166,8 @@ def selectSmallImages():
             print(fileNameSmall)
             complement = '0xff'
             complement = int(complement, base=16)
-            # for i in range(8192-length):
-            #     fOut.write(int.to_bytes(complement, 1, byteorder='big'))
+            for i in range(8192-length):
+                fOut.write(int.to_bytes(complement, 1, byteorder='big'))
             # for i in range(1, int((8192 - length)/64)+1, 1):
                 # complement = ('ff,' * 64) + '\n'
                 # complement = re.sub(r'\]', '', complement)
@@ -187,8 +191,9 @@ def selectSmallImages():
             # print(i)
             adds = '0xff'
             adds = int(adds, base=16)
-            # for i in range((256-len(fileNames))*8192):
-            #     fOut.write(int.to_bytes(adds, 1, byteorder='big'))
+            # print(adds)
+    for i in range((256-len(fileNamesSmall))*8192):
+        fOut.write(int.to_bytes(adds, 1, byteorder='big'))
     # for m in range(1, 256 + 1 - len(fileNames), 1):
     #     for n in range(1, 128 + 1, 1):
     #         adds = ('ff,' * 64) + '\n'
