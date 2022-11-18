@@ -1,4 +1,5 @@
 import re
+import wave
 from tkinter import *
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
@@ -315,7 +316,7 @@ def selectSounds():
         # samplerate, content1 = wavfile.read(fileName)
         content = np.frombuffer(content, dtype = np.uint16)
         # content = np.ndarray(shape=((len(content) // 2),), dtype='<i2', buffer=content)
-        print("len of content" + str(len(content)))
+        print("len of content = " + str(len(content)))
         print(content)
         # for i in content:
         #     print(hex(i))
