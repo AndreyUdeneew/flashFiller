@@ -233,14 +233,19 @@ def selectSounds():
 ###############################################  soundNum obtaining ###############################
         soundNum = soundNum + 1
         soundNumHex = hex(soundNum)
-        print('soundNum='+str(soundNumHex))
+        print('soundNum=' +str(soundNumHex))
         soundNumHex = int(soundNumHex, base=16)
         # soundNumHex = format(int(soundNumHex), 'x')
         print('soundNum='+str(soundNumHex))
 ################################################ length of sounв obtaining ########################
-        print(nframes)
-        nframes *= 4   # 2 channels * 2 bytes per sample
-        print(nframes)
+        print('nchannels = ' + str(nchannels))
+        print('sampwidth = ' + str(sampwidth))
+        print('framerate = ' + str(framerate))
+        print('nframes = ' + str(nframes))
+        print('comptype = ' + str(comptype))
+        print('compname = ' + str(compname))
+        nbytes = nframes * nchannels * (sampwidth / 8)  # 2 channels * 2 bytes per sample
+        print("nbytes = "+str(nbytes))
         nframes_3 = hex((nframes >> 24) & 0xFF)
         nframes_2 = hex((nframes >> 16) & 0xFF)
         nframes_1 = hex((nframes >> 8) & 0xFF)
