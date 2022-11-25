@@ -244,7 +244,7 @@ def selectSounds():
         print('nframes = ' + str(nframes))
         print('comptype = ' + str(comptype))
         print('compname = ' + str(compname))
-        nbytes = nframes * nchannels * (sampwidth / 8)  # 2 channels * 2 bytes per sample
+        nbytes = nframes * nchannels * sampwidth  # 2 channels * 2 bytes per sample
         print("nbytes = "+str(nbytes))
         nframes_3 = hex((nframes >> 24) & 0xFF)
         nframes_2 = hex((nframes >> 16) & 0xFF)
